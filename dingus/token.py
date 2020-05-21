@@ -13,7 +13,10 @@ class Token(object):
         return f'{self.type} {self.lexeme} {self.literal}'
 
     def __repr__(self):
-        return f'Token({self.type}, {self.lexeme}, {self.literal}, {self.line})'
+        lexeme = self.lexeme
+        if lexeme == '\n':
+            lexeme = '\\n'
+        return f'Token({self.type}, {lexeme}, {self.literal}, {self.line})'
 
     def __eq__(self, other):
         return (self.type == other.type and

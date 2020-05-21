@@ -13,11 +13,16 @@ class ErrorHandler:
         self.failed = line
 
 
-def test_scanner():
-    source = 'a = 5 + x'
+def create_scanner(source):
     error_handler = ErrorHandler()
     scanner = Scanner(source, error_handler)
     tokens = scanner.scan_tokens()
+    return tokens, error_handler
+
+
+def test_scanner():
+    source = 'a = 5 + x'
+    tokens, error_handler = create_scanner(source)
     assert tokens[0] == Token(TokenType.IDENTIFIER, 'a', None, 1)
     assert tokens[1] == Token(TokenType.EQUAL, '=', None, 1)
     assert tokens[2] == Token(TokenType.NUMBER, '5', 5, 1)
@@ -29,9 +34,7 @@ def test_scanner():
 
 def test_scanner_unexpected():
     source = 'a = § +'
-    error_handler = ErrorHandler()
-    scanner = Scanner(source, error_handler)
-    tokens = scanner.scan_tokens()
+    tokens, error_handler = create_scanner(source)
     assert tokens[0] == Token(TokenType.IDENTIFIER, 'a', None, 1)
     assert tokens[1] == Token(TokenType.EQUAL, '=', None, 1)
     assert tokens[2] == Token(TokenType.PLUS, '+', None, 1)
@@ -41,9 +44,7 @@ def test_scanner_unexpected():
 
 def test_unterminated_string():
     source = 'a = "string...'
-    error_handler = ErrorHandler()
-    scanner = Scanner(source, error_handler)
-    tokens = scanner.scan_tokens()
+    tokens, error_handler = create_scanner(source)
     assert tokens[0] == Token(TokenType.IDENTIFIER, 'a', None, 1)
     assert tokens[1] == Token(TokenType.EQUAL, '=', None, 1)
     assert tokens[2] == Token(TokenType.EOF, '', None, 1)
@@ -52,9 +53,7 @@ def test_unterminated_string():
 
 def test_escaped_string():
     source = "a = '...\\\'string\\\'...'"
-    error_handler = ErrorHandler()
-    scanner = Scanner(source, error_handler)
-    tokens = scanner.scan_tokens()
+    tokens, error_handler = create_scanner(source)
     assert tokens[0] == Token(TokenType.IDENTIFIER, 'a', None, 1)
     assert tokens[1] == Token(TokenType.EQUAL, '=', None, 1)
     esc_str = "'...\\\'string\\\'...'"
@@ -66,22 +65,19 @@ def test_escaped_string():
 
 def test_keywords():
     source = 'yield then\ngenerator end'
-    error_handler = ErrorHandler()
-    scanner = Scanner(source, error_handler)
-    tokens = scanner.scan_tokens()
+    tokens, error_handler = create_scanner(source)
     assert tokens[0] == Token(TokenType.YIELD, 'yield', None, 1)
     assert tokens[1] == Token(TokenType.THEN, 'then', None, 1)
-    assert tokens[2] == Token(TokenType.GENERATOR, 'generator', None, 2)
-    assert tokens[3] == Token(TokenType.END, 'end', None, 2)
-    assert tokens[4] == Token(TokenType.EOF, '', None, 2)
+    assert tokens[2] == Token(TokenType.END_OF_LINE, '\n', None, 1)
+    assert tokens[3] == Token(TokenType.GENERATOR, 'generator', None, 2)
+    assert tokens[4] == Token(TokenType.END, 'end', None, 2)
+    assert tokens[5] == Token(TokenType.EOF, '', None, 2)
     assert error_handler.failed == -1
 
 
 def test_custom_operator():
     source = 'a@5 !'
-    error_handler = ErrorHandler()
-    scanner = Scanner(source, error_handler)
-    tokens = scanner.scan_tokens()
+    tokens, error_handler = create_scanner(source)
     assert tokens[0] == Token(TokenType.IDENTIFIER, 'a', None, 1)
     assert tokens[1] == Token(TokenType.CUSTOM_OPERATOR, '@', '@', 1)
     assert tokens[2] == Token(TokenType.NUMBER, '5', 5, 1)

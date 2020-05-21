@@ -60,5 +60,7 @@ class TokenType(Enum):
     WHILE = 'while'
     YIELD = 'yield'
 
+    END_OF_LINE = '\n'
+
     # End of file marker
     EOF = '[EOF]'

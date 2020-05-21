@@ -141,6 +141,7 @@ class Scanner(object):
         elif c in (' ', '\r', '\t'):
             pass
         elif c == '\n':
+            self._add_token(TokenType(c))
             self.line += 1
         elif c in ('"', '\''):
             self._string(c)
