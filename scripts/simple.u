@@ -1,0 +1,27 @@
+# Simple variable declarations and math
+a = 1.5 + 3
+b = 9.0 - 1
+
+c = a + b
+d = c / 2
+e = c * 0.5
+
+print a
+print b
+print c
+print d
+print e
+
+# Strings exists
+string = 'abcdefg'
+another_string = "gfedcba"
+concatenation = string + another_string
+norse = 'ᛖᚴ ᚷᛖᛏ ᛖᛏᛁ ᚧ ᚷᛚᛖᚱ ᛘᚾ ᚦᛖᛋᛋ ᚨᚧ ᚡᛖ ᚱᚧᚨ ᛋᚨᚱ'
+escape = 'text \'quoted text\' more text'
+
+print string
+print another_string
+print concatenation
+
+print 5 == 5
+print 5 != 6
