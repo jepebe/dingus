@@ -1,6 +1,8 @@
 import sys
 
+from dingus.ast_printer import AstPrinter
 from dingus.error_handler import ErrorHandler
+from dingus.parser import Parser
 from dingus.scanner import Scanner
 
 EX_OK = 0  # successful termination
@@ -38,7 +40,18 @@ def run_file(path):
     if error.had_error:
         sys.exit(EX_DATAERR)
 
-    print(tokens)
+    parser = Parser(tokens, error)
+    ast = parser.parse()
+
+    if error.warning_count > 0 or error.error_count > 0:
+        ec = error.error_count
+        wc = error.warning_count
+        print(f'{ec} error(s) and {wc} warning(s) occurred')
+
+    if error.had_error:
+        sys.exit(EX_DATAERR)
+
+    print(AstPrinter().print(ast))
 
 
 if len(sys.argv) != 2:

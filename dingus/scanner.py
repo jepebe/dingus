@@ -124,6 +124,10 @@ class Scanner(object):
         while self._peek() != '\n' and not self._is_at_end():
             self._advance()
 
+        if self._peek() == '\n':
+            self._advance()
+            self.line += 1
+
     def _scan_token(self):
         c = self._advance()
 

@@ -1,3 +1,6 @@
+from dingus.token_type import TokenType
+
+
 def red(text):
     return color(text, 1)
 
@@ -28,6 +31,12 @@ class ErrorHandler(object):
 
     def scanner_error(self, line, message):
         self._report(line, '', message, False)
+
+    def parser_error(self, token, message):
+        if token.type == TokenType.EOF:
+            self._report(token.line, " at end", message, False)
+        else:
+            self._report(token.line, f' at \'{token.lexeme}\'', message, False)
 
     # def token_error(self, token, message, warning=False, after=False):
     #     if token.type == TokenType.EOF:
